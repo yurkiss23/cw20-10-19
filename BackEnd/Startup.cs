@@ -78,7 +78,10 @@ namespace BackEnd
         {
             app.UseAuthentication();
             app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
-
+            //app.UseForwardedHeaders(new ForwardedHeadersOptions
+            //{
+            //    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            //});
             dbContext.Database.EnsureCreated();
 
             if (env.IsDevelopment())
