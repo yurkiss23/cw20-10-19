@@ -32,7 +32,7 @@ namespace BackEnd.Controllers
             _signInManager = signInManager;
         }
 
-        [HttpGet("signin")]
+        [HttpPost("signin")]
         public async Task<ActionResult> SignIn([FromBody]SignInViewModels model)
         {
             //var role = _roleManager.FindByNameAsync(model.Role).Result;
@@ -60,7 +60,8 @@ namespace BackEnd.Controllers
                 //}
 
             }
-
+            _context.Add(user);
+            _context.SaveChanges();
             return Ok();
         }
 
