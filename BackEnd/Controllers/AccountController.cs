@@ -19,16 +19,51 @@ namespace BackEnd.Controllers
     public class AccountController : ControllerBase
     {
         private readonly EFDbContext _context;
+        private readonly RoleManager<DbRole> _roleManager;
         private readonly UserManager<DbUser> _userManager;
         private readonly SignInManager<DbUser> _signInManager;
         public AccountController(EFDbContext context,
           UserManager<DbUser> userManager,
-          SignInManager<DbUser> signInManager)
+          SignInManager<DbUser> signInManager, RoleManager<DbRole> roleManager)
         {
+            _roleManager = roleManager;
             _userManager = userManager;
             _context = context;
             _signInManager = signInManager;
         }
+
+        [HttpGet("signin")]
+        public async Task<ActionResult> SignIn([FromBody]SignInViewModels model)
+        {
+            //var role = _roleManager.FindByNameAsync(model.Role).Result;
+            //if (role == null)
+            //{
+            //    role = new DbRole
+            //    {
+            //        Name = model.Role
+            //    };
+            //    var addRoleResult = _roleManager.CreateAsync(role).Result;
+            //}
+            //var userEmail = "bomba@gmail.com";
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                user = new DbUser
+                {
+                    Email = model.Email,
+                    UserName = model.Email
+                };
+                var result = _userManager.CreateAsync(user, model.Password).Result;
+                //if (result.Succeeded)
+                //{
+                //    result = _userManager.AddToRoleAsync(user, model.Role).Result;
+                //}
+
+            }
+
+            return Ok();
+        }
+
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody]LoginViewModels model)
         {
